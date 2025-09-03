@@ -100,3 +100,10 @@ body{
     font-size: 14px;
     margin-top: -6px;
 }
+
+.error{
+    text-align: left;
+    margin-left: 10px;
+    color: #ff3333;
+    display: none;
+}
