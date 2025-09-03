@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meteo</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main class="main-card">
+        <div class="card">
+        <div class="search">
+            <input type="text" id="cityInput" placeholder="Enter city name">
+            <button class="searchBtn"><img src="./assets/magnifying-glass.png" alt="search"></button>
+        </div>
+        <div class="weather">
+            <img src="./assets/cloudy1.png" alt="" class="weather-icon" width="50%">
+            <h1 class="temp">
+                Temp<sup>o</sup>C
+            </h1>
+            <h2 class="city">
+                City
+            </h2>
+            <div class="details">
+                <div class="col col-1">
+                    <img src="./assets/humidity.png" alt="humidity" width="10%">
+                    <div class="humidity">
+                        <p>%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col col-2">
+                    <img src="./assets/weather.png" alt="wind" width="10%">
+                    <div class="wind">
+                        <p>speed Km/h</p>
+                        <p>wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </main>
+
+
+
+    <script src="weather.js"></script>
+</body>
+</html>
