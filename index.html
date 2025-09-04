@@ -3,50 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>meteo</title>
+    <title>Dynamic Weather Dashboard</title>
     <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class="main-card">
-        <div class="card">
-        <div class="search">
-            <input type="text" id="cityInput" placeholder="Enter city name">
-            <button class="searchBtn"><img src="./assets/magnifying-glass.png" alt="search"></button>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>Dashboard</h3>
         </div>
-        <div class="error">
-            <p>Please enter a valid city name</p>
-        </div>
-        <div class="weather">
-            <img src="./assets/cloudy1.png" alt="" class="weather-icon" width="50%">
-            <h1 class="temp">
-                Temp<sup>o</sup>C
-            </h1>
-            <h2 class="city">
-                City
-            </h2>
-            <div class="details">
-                <div class="col col-1">
-                    <img src="./assets/humidity.png" alt="humidity" width="10%">
-                    <div class="humidity">
-                        <p>%</p>
-                        <p>Humidity</p>
-                    </div>
+        <nav class="sidebar-nav">
+            <button id="showMoreInfoBtn" class="sidebar-btn">
+                <img src="./assets/info.png" alt="More Info">
+                <span>More Details</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="blur">
+             <div class="search-container">
+            <div class="card search-card">
+                <div class="search">
+                    <input type="text" id="cityInput" placeholder="Enter city name">
+                    <button class="searchBtn"><img src="./assets/magnifying-glass.png" alt="search"></button>
                 </div>
-                <div class="col col-2">
-                    <img src="./assets/weather.png" alt="wind" width="10%">
-                    <div class="wind">
-                        <p>speed Km/h</p>
-                        <p>wind Speed</p>
+            </div>
+            <div class="error" style="display: none;">
+                <p>Please enter a valid city name</p>
+            </div>
+        </div>
+
+        <div class="weather-grid">
+            <div class="card weather-card active-card">
+                <div class="weather">
+                    <img src="./assets/cloudy1.png" alt="weather icon" class="weather-icon">
+                    <h1 class="temp">Temp<sup>o</sup>C</h1>
+                    <h2 class="city">City</h2>
+                    <div class="details">
+                        <div class="col col-1">
+                            <img src="./assets/humidity.png" alt="humidity" width="10%">
+                            <div>
+                                <p class="humidity">%</p>
+                                <p>Humidity</p>
+                            </div>
+                        </div>
+                        <div class="col col-2">
+                            <img src="./assets/weather.png" alt="wind" width="10%">
+                            <div>
+                                <p class="wind">speed Km/h</p>
+                                <p>Wind Speed</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="card details-card" style="display: none;">
+                <h3>Additional Information</h3>
+                <div class="extra-details-container">
+                    <div class="extra-detail">
+                        <img src="./assets/temperature.png" alt="Feels Like">
+                        <div>
+                            <p class="feels-like">--°C</p>
+                            <p>Feels Like</p>
+                        </div>
+                    </div>
+                    <div class="extra-detail">
+                        <img src="./assets/air.png" alt="Pressure">
+                        <div>
+                            <p class="pressure">-- hPa</p>
+                            <p>Pressure</p>
+                        </div>
+                    </div>
+                    <div class="extra-detail">
+                        <img src="./assets/sunrise.png" alt="Sunrise">
+                        <div>
+                            <p class="sunrise">--</p>
+                            <p>Sunrise</p>
+                        </div>
+                    </div>
+                    <div class="extra-detail">
+                        <img src="./assets/sunset.png" alt="Sunset">
+                        <div>
+                            <p class="sunset">--</p>
+                            <p>Sunset</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="add-card-container">
+                <button id="addCardBtn">
+                    <img src="./assets/fireworks.png" alt="Add Card">
+                    <span>Add New City</span>
+                </button>
+            </div>
         </div>
         </div>
+       
 
     </main>
-
-
-
     <script src="weather.js"></script>
 </body>
 </html>
