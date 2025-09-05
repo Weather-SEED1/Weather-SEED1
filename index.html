@@ -6,53 +6,67 @@
     <title>Dynamic Weather Dashboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start py-8 px-4 bg-gray-100 bg-gradient-to-br from-indigo-100 via-white to-blue-100">
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8 animating-gradient">
 
     <!-- Main Container -->
-    <div class="bg-white rounded-3xl shadow-xl flex flex-col md:flex-row max-w-5xl w-full overflow-hidden mb-8">
+    <div class="bg-white rounded-[32px] shadow-2xl flex flex-col md:flex-row max-w-6xl w-full overflow-hidden backdrop-filter backdrop-blur-sm bg-opacity-70">
 
         <!-- Main Weather Display Area -->
         <div class="flex-1 p-6 md:p-12 flex flex-col justify-between">
-            <div>
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="city-input" placeholder="Enter a city..." class="flex-1 p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
-                    <button id="search-button" class="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <div class="space-y-6">
+                <!-- Search Input and Button -->
+                <div class="flex items-center space-x-3">
+                    <input type="text" id="city-input" placeholder="Enter a city..." class="flex-1 p-3 rounded-2xl border border-gray-200 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 placeholder:text-gray-500">
+                    <button id="search-button" class="bg-blue-500 text-white p-3 rounded-2xl hover:bg-blue-600 transition-colors duration-200 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
                     </button>
                 </div>
 
                 <!-- Loading and Error States -->
-                <div id="loading" class="text-center text-gray-500 mt-8 hidden">
-                    <svg class="animate-spin h-8 w-8 text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="mt-2">Fetching weather data...</p>
+                <div id="loading" class="text-center text-gray-500 hidden">
+                    <div class="flex flex-col items-center">
+                        <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="mt-4 text-lg">Fetching weather data...</p>
+                    </div>
                 </div>
-                <div id="error-message" class="text-center text-red-500 mt-8 hidden">
-                    <p>Could not find weather for that location. Please try another city.</p>
+                <div id="error-message" class="text-center text-red-500 hidden">
+                    <p class="text-lg">Could not find weather for that location. Please try another city.</p>
                 </div>
 
                 <!-- Current Weather Section -->
-                <div id="weather-display" class="mt-8 text-center hidden">
-                    <div class="mb-4">
-                        <h2 id="location-name" class="text-3xl md:text-5xl font-bold text-gray-800"></h2>
-                        <span id="country-name" class="text-lg md:text-xl text-gray-400 font-medium uppercase"></span>
+                <div id="weather-display" class="text-center md:text-left hidden">
+                    <div class="location-details mb-4">
+                        <h2 id="location-name" class="text-4xl md:text-5xl font-bold text-gray-800"></h2>
+                        <span id="country-name" class="text-xl text-gray-500"></span>
+                        <p id="date" class="text-gray-500 text-lg mt-1"></p>
                     </div>
-                    <p id="date" class="text-gray-500 mt-1 text-base md:text-lg"></p>
-                    <div class="flex flex-col items-center mt-6">
-                        <img id="weather-icon" src="" alt="Weather Icon" class="w-20 h-20 md:w-24 md:h-24">
-                        <p id="temperature" class="text-5xl md:text-7xl font-light text-gray-900 mt-2"></p>
-                        <p id="description" class="text-lg md:text-2xl font-medium text-gray-600 mt-1 capitalize"></p>
+
+                    <div class="flex flex-col md:flex-row items-center md:items-start md:space-x-8">
+                        <div class="flex-shrink-0">
+                            <img id="weather-icon" src="" alt="Weather Icon" class="w-32 h-32 md:w-40 md:h-40">
+                        </div>
+                        <div class="flex-grow flex flex-col items-center md:items-start mt-4 md:mt-0">
+                            <p id="temperature" class="text-6xl md:text-7xl font-light text-gray-900"></p>
+                            <p id="description" class="text-2xl md:text-3xl font-medium text-gray-600 capitalize"></p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Empty space to push content to the top -->
-            <div class="mt-auto"></div>
+
+            <!-- Saved Locations Section -->
+            <div id="saved-locations-section" class="mt-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Saved Locations</h3>
+                <div id="saved-locations-container" class="flex overflow-x-auto space-x-4 pb-4 -mb-4 scroll-smooth">
+                    <!-- Location cards will be dynamically inserted here -->
+                </div>
+            </div>
         </div>
 
         <!-- Detailed Weather Sidebar -->
@@ -91,19 +105,10 @@
         </div>
     </div>
 
-    <!-- Saved Locations Section -->
-    <div class="w-full max-w-5xl mt-6">
-        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Saved Locations</h3>
-        <div id="saved-locations-container" class="scroll-container flex space-x-4 pb-4 overflow-x-auto">
-            <!-- Saved location cards will be injected here by JavaScript -->
-        </div>
-    </div>
-
     <script>
         // NOTE: Replace 'YOUR_API_KEY_HERE' with your actual OpenWeatherMap API key.
         // You can get one for free at https://openweathermap.org/api
-        const API_KEY = 'ea0bfb722996db6da6f27d827b132410';
-        const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+       
 
         // Get DOM elements
         const cityInput = document.getElementById('city-input');
@@ -183,13 +188,13 @@
             if (!data) return;
             // Add a pointer cursor to indicate the card is clickable
             const card = document.createElement('div');
-            card.className = 'flex-shrink-0 w-48 bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-between cursor-pointer transform hover:scale-105 transition-transform duration-200';
+            card.className = 'flex-shrink-0 w-48 bg-white rounded-2xl shadow-md p-4 flex flex-col items-center justify-between cursor-pointer transform hover:scale-105 transition-transform duration-200';
             card.dataset.city = data.name;
 
             const content = `
                 <div class="w-full flex justify-end">
                     <button class="remove-btn text-gray-400 hover:text-red-500 transition-colors duration-200" data-city="${data.name}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
@@ -301,7 +306,7 @@
                  const firstCity = savedLocations[0];
                  const data = await getWeather(firstCity);
                  if (data) {
-                    renderMainWeather(data);
+                     renderMainWeather(data);
                  }
             } else {
                 // Set default to Bamenda, Cameroon if no saved locations exist
@@ -314,5 +319,6 @@
         });
 
     </script>
+    <script src="./weather.js"></script>
 </body>
 </html>

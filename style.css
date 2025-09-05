@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url("./noaa-kcvlb727mn8-unsplash.jpg");
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-size: cover; /* Ensures the image covers the entire element */
+            background-position: center; /* Centers the image */
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+      
