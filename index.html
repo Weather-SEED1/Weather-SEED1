@@ -4,107 +4,315 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Weather Dashboard</title>
-    <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center justify-start py-8 px-4 bg-gray-100 bg-gradient-to-br from-indigo-100 via-white to-blue-100">
 
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h3>Dashboard</h3>
-        </div>
-        <nav class="sidebar-nav">
-            <button id="showMoreInfoBtn" class="sidebar-btn">
-                <img src="./assets/info.png" alt="More Info">
-                <span>More Details</span>
-            </button>
-        </nav>
-    </aside>
+    <!-- Main Container -->
+    <div class="bg-white rounded-3xl shadow-xl flex flex-col md:flex-row max-w-5xl w-full overflow-hidden mb-8">
 
-    <main class="dashboard-main">
-        <div class="blur">
-             <div class="search-container">
-            <div class="card search-card">
-                <div class="search">
-                    <input type="text" id="cityInput" placeholder="Enter city name">
-                    <button class="searchBtn"><img src="./assets/magnifying-glass.png" alt="search"></button>
+        <!-- Main Weather Display Area -->
+        <div class="flex-1 p-6 md:p-12 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="city-input" placeholder="Enter a city..." class="flex-1 p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200">
+                    <button id="search-button" class="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </button>
                 </div>
-            </div>
-            <div class="error" style="display: none;">
-                <p>Please enter a valid city name</p>
-            </div>
-        </div>
 
-        <div class="weather-grid">
-            <div class="card weather-card active-card">
-                <div class="weather">
-                    <img src="./assets/cloudy1.png" alt="weather icon" class="weather-icon">
-                    <h1 class="temp">Temp<sup>o</sup>C</h1>
-                    <h2 class="city">City</h2>
-                    <div class="details">
-                        <div class="col col-1">
-                            <img src="./assets/humidity.png" alt="humidity" width="10%">
-                            <div>
-                                <p class="humidity">%</p>
-                                <p>Humidity</p>
-                            </div>
-                        </div>
-                        <div class="col col-2">
-                            <img src="./assets/weather.png" alt="wind" width="10%">
-                            <div>
-                                <p class="wind">speed Km/h</p>
-                                <p>Wind Speed</p>
-                            </div>
-                        </div>
+                <!-- Loading and Error States -->
+                <div id="loading" class="text-center text-gray-500 mt-8 hidden">
+                    <svg class="animate-spin h-8 w-8 text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-2">Fetching weather data...</p>
+                </div>
+                <div id="error-message" class="text-center text-red-500 mt-8 hidden">
+                    <p>Could not find weather for that location. Please try another city.</p>
+                </div>
+
+                <!-- Current Weather Section -->
+                <div id="weather-display" class="mt-8 text-center hidden">
+                    <div class="mb-4">
+                        <h2 id="location-name" class="text-3xl md:text-5xl font-bold text-gray-800"></h2>
+                        <span id="country-name" class="text-lg md:text-xl text-gray-400 font-medium uppercase"></span>
+                    </div>
+                    <p id="date" class="text-gray-500 mt-1 text-base md:text-lg"></p>
+                    <div class="flex flex-col items-center mt-6">
+                        <img id="weather-icon" src="" alt="Weather Icon" class="w-20 h-20 md:w-24 md:h-24">
+                        <p id="temperature" class="text-5xl md:text-7xl font-light text-gray-900 mt-2"></p>
+                        <p id="description" class="text-lg md:text-2xl font-medium text-gray-600 mt-1 capitalize"></p>
                     </div>
                 </div>
             </div>
+            <!-- Empty space to push content to the top -->
+            <div class="mt-auto"></div>
+        </div>
 
-            <div class="card details-card" style="display: none;">
-                <h3>Additional Information</h3>
-                <div class="extra-details-container">
-                    <div class="extra-detail">
-                        <img src="./assets/temperature.png" alt="Feels Like">
-                        <div>
-                            <p class="feels-like">--°C</p>
-                            <p>Feels Like</p>
-                        </div>
-                    </div>
-                    <div class="extra-detail">
-                        <img src="./assets/air.png" alt="Pressure">
-                        <div>
-                            <p class="pressure">-- hPa</p>
-                            <p>Pressure</p>
-                        </div>
-                    </div>
-                    <div class="extra-detail">
-                        <img src="./assets/sunrise.png" alt="Sunrise">
-                        <div>
-                            <p class="sunrise">--</p>
-                            <p>Sunrise</p>
-                        </div>
-                    </div>
-                    <div class="extra-detail">
-                        <img src="./assets/sunset.png" alt="Sunset">
-                        <div>
-                            <p class="sunset">--</p>
-                            <p>Sunset</p>
-                        </div>
-                    </div>
+        <!-- Detailed Weather Sidebar -->
+        <div id="sidebar" class="bg-gray-50 p-6 md:p-12 flex flex-col justify-center w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">Details</h3>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Feels Like</span>
+                    <span id="feels-like" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Humidity</span>
+                    <span id="humidity" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Wind Speed</span>
+                    <span id="wind-speed" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Pressure</span>
+                    <span id="pressure" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Visibility</span>
+                    <span id="visibility" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                    <span class="text-gray-600">Sunrise</span>
+                    <span id="sunrise" class="text-gray-900 font-medium"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Sunset</span>
+                    <span id="sunset" class="text-gray-900 font-medium"></span>
                 </div>
             </div>
-            
-            <div class="add-card-container">
-                <button id="addCardBtn">
-                    <img src="./assets/fireworks.png" alt="Add Card">
-                    <span>Add New City</span>
-                </button>
-            </div>
         </div>
-        </div>
-       
+    </div>
 
-    </main>
-    <script src="weather.js"></script>
+    <!-- Saved Locations Section -->
+    <div class="w-full max-w-5xl mt-6">
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Saved Locations</h3>
+        <div id="saved-locations-container" class="scroll-container flex space-x-4 pb-4 overflow-x-auto">
+            <!-- Saved location cards will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // NOTE: Replace 'YOUR_API_KEY_HERE' with your actual OpenWeatherMap API key.
+        // You can get one for free at https://openweathermap.org/api
+        const API_KEY = 'ea0bfb722996db6da6f27d827b132410';
+        const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
+        // Get DOM elements
+        const cityInput = document.getElementById('city-input');
+        const searchButton = document.getElementById('search-button');
+        const weatherDisplay = document.getElementById('weather-display');
+        const loadingIndicator = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const locationName = document.getElementById('location-name');
+        const countryName = document.getElementById('country-name');
+        const dateEl = document.getElementById('date');
+        const weatherIcon = document.getElementById('weather-icon');
+        const temperatureEl = document.getElementById('temperature');
+        const descriptionEl = document.getElementById('description');
+
+        // Sidebar elements
+        const feelsLikeEl = document.getElementById('feels-like');
+        const humidityEl = document.getElementById('humidity');
+        const windSpeedEl = document.getElementById('wind-speed');
+        const pressureEl = document.getElementById('pressure');
+        const visibilityEl = document.getElementById('visibility');
+        const sunriseEl = document.getElementById('sunrise');
+        const sunsetEl = document.getElementById('sunset');
+        const sidebar = document.getElementById('sidebar');
+
+        // New elements for saved locations
+        const savedLocationsContainer = document.getElementById('saved-locations-container');
+
+        // --- Core Functions ---
+
+        async function getWeather(city) {
+            try {
+                const response = await fetch(`${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric`);
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                return null;
+            }
+        }
+        
+        // Function to render the main weather display
+        function renderMainWeather(data) {
+            if (!data) return;
+
+            // Show the main weather display and sidebar
+            weatherDisplay.classList.remove('hidden');
+            sidebar.classList.remove('hidden');
+
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+            locationName.textContent = data.name;
+            countryName.textContent = data.sys.country;
+            dateEl.textContent = now.toLocaleDateString('en-US', options);
+            temperatureEl.innerHTML = `${Math.round(data.main.temp)}&deg;C`;
+            descriptionEl.textContent = data.weather[0].description;
+            weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+            weatherIcon.alt = data.weather[0].main;
+
+            feelsLikeEl.innerHTML = `${Math.round(data.main.feels_like)}&deg;C`;
+            humidityEl.textContent = `${data.main.humidity}%`;
+            windSpeedEl.textContent = `${(data.wind.speed * 3.6).toFixed(1)} km/h`;
+            pressureEl.textContent = `${data.main.pressure} hPa`;
+            visibilityEl.textContent = `${(data.visibility / 1000).toFixed(1)} km`;
+
+            const sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            sunriseEl.textContent = sunriseTime;
+            sunsetEl.textContent = sunsetTime;
+        }
+
+        // Function to render a single saved location card
+        function renderSavedLocationCard(data) {
+            if (!data) return;
+            // Add a pointer cursor to indicate the card is clickable
+            const card = document.createElement('div');
+            card.className = 'flex-shrink-0 w-48 bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-between cursor-pointer transform hover:scale-105 transition-transform duration-200';
+            card.dataset.city = data.name;
+
+            const content = `
+                <div class="w-full flex justify-end">
+                    <button class="remove-btn text-gray-400 hover:text-red-500 transition-colors duration-200" data-city="${data.name}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-col items-center text-center -mt-2">
+                    <h4 class="font-semibold text-lg text-gray-800">${data.name}</h4>
+                    <span class="text-sm text-gray-500 uppercase">${data.sys.country}</span>
+                </div>
+                <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="Weather Icon" class="w-16 h-16">
+                <p class="text-3xl font-light text-gray-900 mt-2">${Math.round(data.main.temp)}&deg;C</p>
+                <p class="text-sm text-gray-600 capitalize">${data.weather[0].description}</p>
+            `;
+            card.innerHTML = content;
+            savedLocationsContainer.appendChild(card);
+        }
+
+        // Function to get locations from localStorage
+        function getSavedLocations() {
+            const locations = localStorage.getItem('savedLocations');
+            return locations ? JSON.parse(locations) : [];
+        }
+
+        // Function to save locations to localStorage
+        function saveLocations(locations) {
+            localStorage.setItem('savedLocations', JSON.stringify(locations));
+        }
+
+        // Function to render all saved locations
+        async function renderSavedLocations() {
+            const locations = getSavedLocations();
+            savedLocationsContainer.innerHTML = '';
+            for (const city of locations) {
+                const data = await getWeather(city);
+                if (data) {
+                    renderSavedLocationCard(data);
+                }
+            }
+        }
+
+        // Function to add a city to saved locations
+        async function addSavedLocation(city) {
+            const locations = getSavedLocations();
+            if (!locations.includes(city)) {
+                locations.push(city);
+                saveLocations(locations);
+                await renderSavedLocations();
+            }
+        }
+
+        // --- Event Listeners ---
+        searchButton.addEventListener('click', async () => {
+            const city = cityInput.value.trim();
+            if (city) {
+                loadingIndicator.classList.remove('hidden');
+                weatherDisplay.classList.add('hidden');
+                sidebar.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+                const data = await getWeather(city);
+                loadingIndicator.classList.add('hidden');
+
+                if (data) {
+                    renderMainWeather(data);
+                    await addSavedLocation(data.name);
+                } else {
+                    weatherDisplay.classList.add('hidden');
+                    sidebar.classList.add('hidden');
+                    errorMessage.classList.remove('hidden');
+                }
+            }
+        });
+
+        cityInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                searchButton.click();
+            }
+        });
+
+        // Event delegation for all saved location cards
+        savedLocationsContainer.addEventListener('click', async (event) => {
+            const card = event.target.closest('[data-city]');
+            // Check if the click was on the card itself, not the remove button
+            if (card && !event.target.closest('.remove-btn')) {
+                const city = card.dataset.city;
+                loadingIndicator.classList.remove('hidden');
+                weatherDisplay.classList.add('hidden');
+                sidebar.classList.add('hidden');
+                const data = await getWeather(city);
+                loadingIndicator.classList.add('hidden');
+                if (data) {
+                    renderMainWeather(data);
+                }
+            }
+             // Check if the click was on the remove button
+            if (event.target.closest('.remove-btn')) {
+                const button = event.target.closest('.remove-btn');
+                const cityToRemove = button.dataset.city;
+                let locations = getSavedLocations();
+                locations = locations.filter(city => city.toLowerCase() !== cityToRemove.toLowerCase());
+                saveLocations(locations);
+                await renderSavedLocations();
+            }
+        });
+        
+        // Handle initial load
+        window.addEventListener('load', async () => {
+            await renderSavedLocations();
+            const savedLocations = getSavedLocations();
+            if (savedLocations.length > 0) {
+                 const firstCity = savedLocations[0];
+                 const data = await getWeather(firstCity);
+                 if (data) {
+                    renderMainWeather(data);
+                 }
+            } else {
+                // Set default to Bamenda, Cameroon if no saved locations exist
+                const defaultCity = 'Bamenda, Cameroon';
+                const data = await getWeather(defaultCity);
+                if (data) {
+                    renderMainWeather(data);
+                }
+            }
+        });
+
+    </script>
 </body>
 </html>
